@@ -1,4 +1,0 @@
-AuthUserFile /kunden/221818_53177/rp-hosting/24/26/genesungspost.de/module/qcodo/.htpasswd
-AuthName "qcodo"
-AuthType Basic
-require valid-user
