@@ -5,12 +5,14 @@ class Person extends PersonGen {
 
 	/**
 	 * @api
+	 * @param bool $bolIncludeInactive
 	 * @return stdClass[]
 	 * @throws Exception
 	 */
-	public static function ListAll(){
+	public static function ListAll($bolIncludeInactive=false){
 		$aryResult = array();
-		foreach(Person::QueryArray(QQ::All(),QQ::OrderBy(QQN::Person()->LastName)) as $Person) $aryResult[] = $Person->ToStdClass(true);
+		$Condition = $bolIncludeInactive ? QQ::All() : QQ::Equal(QQN::Person()->Active,true);
+		foreach(Person::QueryArray($Condition,QQ::OrderBy(QQN::Person()->LastName)) as $Person) $aryResult[] = $Person->ToStdClass(true);
 		return $aryResult;
 	}
 
@@ -30,6 +32,29 @@ class Person extends PersonGen {
 		if(!$bolPublic) $stdPerson->active = $this->Active;
 		$stdPerson->rank = $this->Rank->ToStdClass();
 		return $stdPerson;
+	}
+	
+	/**
+	 * @api
+	 * @return mixed[]
+	 * @throws Exception
+	 */
+	public static function GetStatistics(){
+		
+		$QueryResult = Person::GetDatabase()->Query("select AVG(date_format(now(),'%Y')-date_format(date_of_birth, '%Y')-(date_format(now(),'%m%d')<date_format(date_of_birth,'%m%d'))) from person where active=1");
+		$aryRow = $QueryResult->FetchRow();
+		$fltAverageAge = floatval($aryRow[0]);
+		
+		$QueryResult = Person::GetDatabase()->Query("select AVG(date_format(now(),'%Y')-date_format(date_of_entry, '%Y')-(date_format(now(),'%m%d')<date_format(date_of_entry,'%m%d'))) from person where active=1");
+		$aryRow = $QueryResult->FetchRow();
+		$fltAverageTimeOnDuty = floatval($aryRow[0]);
+		
+		$QueryResult = Person::GetDatabase()->Query("select group_concat(name separator ' / ') from rank where sort=(select ROUND(AVG(sort)) from person join rank using(rank_id))");
+		$aryRow = $QueryResult->FetchRow();
+		$strAverageRankName = $aryRow[0];
+		
+		return array($fltAverageAge,$fltAverageTimeOnDuty,$strAverageRankName);
+	
 	}
 
 }
