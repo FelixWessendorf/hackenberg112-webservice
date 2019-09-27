@@ -15,6 +15,17 @@ class Operation extends OperationGen {
 	}
 
 	/**
+	 * @api
+	 * @return stdClass[]
+	 * @throws QCallerException
+	 */
+	public static function LoadOperations(){
+		$aryOperations = array();
+		foreach(Operation::QueryArray(QQ::All(),QQ::OrderBy(QQN::Operation()->Date,"DESC")) as $Operation) $aryOperations[] = $Operation->ToStdClass();
+		return $aryOperations;
+	}
+
+	/**
 	 * @return stdClass
 	 */
 	public function ToStdClass(){
