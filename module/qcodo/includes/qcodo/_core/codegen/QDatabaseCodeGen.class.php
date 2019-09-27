@@ -49,7 +49,7 @@
 		protected $strRelationshipsScriptPath;
 		protected $strRelationshipsScriptFormat;
 		protected $blnRelationshipsScriptIgnoreCase;
-		
+
 		protected $strRelationshipLinesQcodo = array();
 		protected $strRelationshipLinesSql = array();
 
@@ -77,7 +77,7 @@
 				return $objTable->ColumnArray[$strColumnName];
 			throw new QCallerException(sprintf('Column does not exist in %s: %s', $strTableName, $strColumnName));
 		}
-		
+
 		/**
 		 * Given a CASE INSENSITIVE table and column name, it will return TRUE if the Table/Column
 		 * exists ANYWHERE in the already analyzed database
@@ -146,7 +146,7 @@
 				$strReportLabel = 'There was 1 table available to attempt code generation:';
 			else
 				$strReportLabel = 'There were ' . $intTotalTableCount . ' tables available to attempt code generation:';
-				
+
 			return $strReportLabel;
 		}
 
@@ -178,7 +178,7 @@
 
 			return $strReport;
 		}
-		
+
 		public static function GenerateAggregateHelper($objCodeGenArray) {
 			$strToReturn = array();
 
@@ -226,7 +226,7 @@
 			$this->intDatabaseIndex = QCodeGen::LookupSetting($objSettingsXml, null, 'index', QType::Integer);
 
 			// Append Suffix/Prefixes
-			$this->strClassPrefix = QCodeGen::LookupSetting($objSettingsXml, 'className', 'prefix');			
+			$this->strClassPrefix = QCodeGen::LookupSetting($objSettingsXml, 'className', 'prefix');
 			$this->strClassSuffix = QCodeGen::LookupSetting($objSettingsXml, 'className', 'suffix');
 			$this->strAssociatedObjectPrefix = QCodeGen::LookupSetting($objSettingsXml, 'associatedObjectName', 'prefix');
 			$this->strAssociatedObjectSuffix = QCodeGen::LookupSetting($objSettingsXml, 'associatedObjectName', 'suffix');
@@ -271,7 +271,7 @@
 				if ($strLines) foreach ($strLines as $strLine) {
 					$strLine = trim($strLine);
 
-					if (($strLine) && 
+					if (($strLine) &&
 						(strlen($strLine) > 2) &&
 						(substr($strLine, 0, 2) != '//') &&
 						(substr($strLine, 0, 2) != '--') &&
@@ -292,7 +292,7 @@
 							if ($strLines) foreach ($strLines as $strLine) {
 								$strLine = trim($strLine);
 
-								if (($strLine) && 
+								if (($strLine) &&
 									(strlen($strLine) > 2) &&
 									(substr($strLine, 0, 2) != '//') &&
 									(substr($strLine, 0, 2) != '--') &&
@@ -320,7 +320,7 @@
 											(substr($strLine, 0, 1) != '#')) {
 											// Cleanup and Normalize Whitespace
 											$strLine = str_replace("\r", ' ', $strLine);
-											while (strpos($strLine, '  ') !== false) 
+											while (strpos($strLine, '  ') !== false)
 												$strLine = str_replace('  ', ' ', $strLine);
 											$strCommand .= trim($strLine) . ' ';
 										}
@@ -373,7 +373,7 @@
 				// First check the lists of Excludes and the Exclude Patterns
 				if (in_array($strTableName,$this->strExcludeListArray) ||
 					(strlen($this->strExcludePattern) > 0 && preg_match(":".$this->strExcludePattern.":i",$strTableName))) {
-						
+
 					// So we THINK we may be excluding this table
 					// But check against the explicit INCLUDE list and patterns
 					if (in_array($strTableName,$this->strIncludeListArray) ||
@@ -445,7 +445,7 @@
 						$objReferencedTable = $this->GetTable($objReference->Table);
 						$objReferencedColumn = $objReferencedTable->ColumnArray[strtolower($objReference->Column)];
 
-						
+
 						if (!$objReferencedColumn->PrimaryKey) {
 							$this->strErrors .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
 								$objReferencedTable->ClassName, $objReference->KeyName, $objReferencedColumn->Name, $objReferencedTable->Name);
@@ -463,14 +463,14 @@
 				array_push($strArray, $objColumn->Name);
 			return implode(', ', $strArray);
 		}
-		
+
 		protected function GetColumnArray(QTable $objTable, $strColumnNameArray) {
 			$objToReturn = array();
 
 			if ($strColumnNameArray) foreach ($strColumnNameArray as $strColumnName) {
 				array_push($objToReturn, $objTable->ColumnArray[strtolower($strColumnName)]);
 			}
-			
+
 			return $objToReturn;
 		}
 
@@ -502,9 +502,9 @@
 					$strTableName);
 				return;
 			}
-			
+
 			if (((!$objFieldArray[0]->PrimaryKey) &&
-				 ($objFieldArray[1]->PrimaryKey)) || 
+				 ($objFieldArray[1]->PrimaryKey)) ||
 				(($objFieldArray[0]->PrimaryKey) &&
 				 (!$objFieldArray[1]->PrimaryKey))) {
 				$this->strErrors .= sprintf("AssociationTable %s only support two-column composite Primary Keys.\n",
@@ -559,7 +559,7 @@
 				$objManyToManyReference->Column = $objForeignKey->ColumnNameArray[0];
 				$objManyToManyReference->OppositeColumn = $objOppositeForeignKey->ColumnNameArray[0];
 				$objManyToManyReference->AssociatedTable = $objOppositeForeignKey->ReferenceTableName;
-				
+
 				// Calculate OppositeColumnVariableName
 				// Do this by first making a fake column which is the PK column of the AssociatedTable,
 				// but who's column name is ManyToManyReference->Column
@@ -590,8 +590,8 @@
 				}
 			}
 			$objManyToManyReferenceArray[0]->ColumnArray = $objColumnArray;
-			$objManyToManyReferenceArray[1]->ColumnArray = $objColumnArray;			
-			
+			$objManyToManyReferenceArray[1]->ColumnArray = $objColumnArray;
+
 			// Push the ManyToManyReference Objects to the tables
 			for ($intIndex = 0; $intIndex < 2; $intIndex++) {
 				$objManyToManyReference = $objManyToManyReferenceArray[$intIndex];
@@ -615,7 +615,7 @@
 			// Setup the Type Table Object
 			$strTableName = $objTypeTable->Name;
 			$objTypeTable->ClassName = $this->ClassNameFromTableName($strTableName);
-			
+
 			// Ensure that there are only 2 fields, an integer PK field (can be named anything) and a unique varchar field
 			$objFieldArray = $this->objDb->GetFieldsForTable($strTableName);
 
@@ -625,7 +625,7 @@
 					$strTableName);
 				return;
 			}
-			
+
 			if (($objFieldArray[1]->Type != QDatabaseFieldType::VarChar) ||
 				(!$objFieldArray[1]->Unique)) {
 				$this->strErrors .= sprintf("TypeTable %s's second column is not a unique VARCHAR.\n",
@@ -682,7 +682,7 @@
 
 			// Get the List of Columns
 			$objFieldArray = $this->objDb->GetFieldsForTable($strTableName);
-	
+
 			// Iterate through the list of Columns to create objColumnArray
 			$objColumnArray = array();
 			if ($objFieldArray) foreach ($objFieldArray as $objField) {
@@ -696,7 +696,7 @@
 
 			// Get the List of Indexes
 			$objTable->IndexArray = $this->objDb->GetIndexesForTable($objTable->Name);
-			
+
 			// Create an Index array
 			$objIndexArray = array();
 			// Create our Index for Primary Key (if applicable)
@@ -713,7 +713,7 @@
 				$objIndex->Unique = true;
 				$objIndex->ColumnNameArray = $strPrimaryKeyArray;
 				array_push($objIndexArray, $objIndex);
-				
+
 				if (count($strPrimaryKeyArray) == 1) {
 					$objPkColumn->Unique = true;
 					$objPkColumn->Indexed = true;
@@ -776,7 +776,7 @@
 					}
 				}
 			}
-			
+
 			// Add the IndexArray to the table
 			$objTable->IndexArray = $objIndexArray;
 
@@ -802,7 +802,7 @@
 
 					if (array_key_exists(strtolower($strColumnName), $objTable->ColumnArray) &&
 						($objColumn = $objTable->ColumnArray[strtolower($strColumnName)])) {
-							
+
 						// Now, we make sure there is a single-column index for this FK that exists
 						$blnFound = false;
 						if ($objIndexArray = $objTable->IndexArray) foreach ($objIndexArray as $objIndex) {
@@ -836,13 +836,13 @@
 
 							// STEP 1: Create the New Reference
 							$objReference = new QReference();
-	
+
 							// Retrieve the Column object
 							$objColumn = $objTable->ColumnArray[strtolower($strColumnName)];
-	
+
 							// Setup Key Name
 							$objReference->KeyName = $objForeignKey->KeyName;
-	
+
 							$strReferencedTableName = $objForeignKey->ReferenceTableName;
 
 							// Setup IsType flag
@@ -855,21 +855,21 @@
 							// Setup Table and Column names
 							$objReference->Table = $strReferencedTableName;
 							$objReference->Column = $objForeignKey->ReferenceColumnNameArray[0];
-	
+
 							// Setup VariableType
 							$objReference->VariableType = $this->ClassNameFromTableName($strReferencedTableName);
-							
+
 							// Setup PropertyName and VariableName
 							$objReference->PropertyName = $this->ReferencePropertyNameFromColumn($objColumn);
 							$objReference->VariableName = $this->ReferenceVariableNameFromColumn($objColumn);
-							
+
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
-							
-							
-							
+
+
+
 							// STEP 2: Setup the REVERSE Reference for Non Type-based References
-							if (!$objReference->IsType) {						
+							if (!$objReference->IsType) {
 								// Retrieve the ReferencedTable object
 //								$objReferencedTable = $this->objTableArray[strtolower($objReference->Table)];
 								$objReferencedTable = $this->GetTable($objReference->Table);
@@ -983,7 +983,7 @@
 			$objColumn->NotNull = $objField->NotNull;
 			$objColumn->Identity = $objField->Identity;
 			$objColumn->Unique = $objField->Unique;
-			if (($objField->PrimaryKey) && $objTable && (count($objTable->PrimaryKeyColumnArray) == 1))
+			if (($objField->PrimaryKey) && $objTable && ($objTable->PrimaryKeyColumnArray !== null && count($objTable->PrimaryKeyColumnArray) == 1))
 				$objColumn->Unique = true;
 			$objColumn->Timestamp = $objField->Timestamp;
 
@@ -998,7 +998,7 @@
 			if ($this->intStripTablePrefixLength &&
 				(strlen($strTableName) > $this->intStripTablePrefixLength) &&
 				(substr($strTableName, 0, $this->intStripTablePrefixLength - strlen($strTableName)) == $this->strStripTablePrefix))
-				return substr($strTableName, $this->intStripTablePrefixLength);	
+				return substr($strTableName, $this->intStripTablePrefixLength);
 
 			return $strTableName;
 		}
@@ -1152,7 +1152,7 @@
 						array_push($objForeignKeyArray, $objForeignKey);
 						$this->strRelationshipLinesQcodo[$strLine] = null;
 					}
-				}					
+				}
 			}
 
 			foreach ($this->strRelationshipLinesSql as $strLine) {

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class Error
+ * Class MyError
  * @package Website/Core
  * @version 2.1 (2015-04-04)
  * @author Felix Wessendorf <felix.wessendorf@wfelix.de>
  */
-class Error {
+class MyError {
 
     /** @var string */
     public $Source, $Message, $File;
@@ -14,7 +14,7 @@ class Error {
     /** @var int */
     public $Type, $Code, $Line;
 
-    /** @var Error[] */
+    /** @var MyError[] */
     private static $Errors = array();
 
     /**
@@ -61,7 +61,7 @@ class Error {
      * @param int    $intCode
      * @param string $strFile
      * @param int    $intLine
-     * @return Error
+     * @return MyError
      */
     public static function Create($strSource="Unknown",$strMessage="An error occurred",$intType=E_ERROR,$intCode=0,$strFile="",$intLine=0) {
         return new self($strSource,$strMessage,$intType,$intCode,$strFile,$intLine);
@@ -77,12 +77,12 @@ class Error {
      * @return bool
      */
     public static function Register($strSource="Unknown",$strMessage="An error occurred",$intType=E_ERROR,$intCode=0,$strFile="",$intLine=0) {
-        self::$Errors[] = new Error($strSource,$strMessage,$intType,$intCode,$strFile,$intLine);
+        self::$Errors[] = new MyError($strSource,$strMessage,$intType,$intCode,$strFile,$intLine);
         return false;
     }
 
     /**
-     * @return Error[]
+     * @return MyError[]
      */
     public static function All(){
         return self::$Errors;

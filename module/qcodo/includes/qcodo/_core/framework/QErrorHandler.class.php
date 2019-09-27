@@ -1,9 +1,9 @@
 <?php
 	/**
 	 * Qcodo Error Handler
-	 * 
+	 *
 	 * If we are in this class, we must assume that the application is in an unstable state.
-	 * 
+	 *
 	 * Thus, we cannot depend on any other qcodo or application-based classes or objects
 	 * to help with the error processing.
 	 *
@@ -32,7 +32,7 @@
 		public static $DateTimeOfError;
 		public static $FileNameOfError;
 		public static $IsoDateTimeOfError;
-		
+
 		public static $CliReportWidth = 138;
 
 		protected static function Run() {
@@ -80,7 +80,7 @@
 				require(__QCODO_CORE__ . '/assets/error_dump_cli.inc.php');
 			else
 				require(__QCODO_CORE__ . '/assets/error_dump.inc.php');
-				
+
 			// Do We Log???
 			if (defined('__ERROR_LOG__') && __ERROR_LOG__ && defined('ERROR_LOG_FLAG') && ERROR_LOG_FLAG) {
 				// Log to File in __ERROR_LOG__
@@ -96,7 +96,7 @@
 				if (defined('ERROR_FRIENDLY_AJAX_MESSAGE') && ERROR_FRIENDLY_AJAX_MESSAGE) {
 					// Reset the Buffer
 					while(ob_get_level()) ob_end_clean();
-		
+
 					// Setup the Friendly Response
 					header('Content-Type: text/xml');
 					$strToReturn = '<controls/><commands><command>alert("' . str_replace('"', '\\"', ERROR_FRIENDLY_AJAX_MESSAGE) . '");</command></commands>';
@@ -111,7 +111,7 @@
 				if (defined('ERROR_FRIENDLY_PAGE_PATH') && ERROR_FRIENDLY_PAGE_PATH && !QApplication::$CliMode) {
 					// Reset the Buffer
 					while(ob_get_level()) ob_end_clean();
-					require(ERROR_FRIENDLY_PAGE_PATH);		
+					require(ERROR_FRIENDLY_PAGE_PATH);
 				}
 			}
 
@@ -131,15 +131,15 @@
 
 
 
-		public static function HandleException(Exception $objException) {
+		public static function HandleException($objException) {
 			// If we still have access to QApplicationBase, set the error flag on the Application
 			if (class_exists('QApplicationBase'))
 				QApplicationBase::$ErrorFlag = true;
-	
+
 			// If we are currently dealing with reporting an error, don't go on
 			if (QErrorHandler::$Type)
 				return;
-	
+
 			// Setup the QErrorHandler Object
 			QErrorHandler::$Type = 'Exception';
 			$objReflection = new ReflectionObject($objException);
@@ -148,16 +148,16 @@
 			QErrorHandler::$Filename = $objException->getFile();
 			QErrorHandler::$LineNumber = $objException->getLine();
 			QErrorHandler::$StackTrace = trim($objException->getTraceAsString());
-	
+
 			// Special Setup for Database Exceptions
 			if ($objException instanceof QDatabaseExceptionBase) {
 				QErrorHandler::$ErrorAttributeArray[] = new QErrorAttribute('Database Error Number', $objException->ErrorNumber, false);
-	
+
 				if ($objException->Query) {
 					QErrorHandler::$ErrorAttributeArray[] = new QErrorAttribute('Query', $objException->Query, true);
 				}
 			}
-	
+
 			// Sepcial Setup for DataBind Exceptions
 			if ($objException instanceof QDataBindException) {
 				if ($objException->Query) {
@@ -174,21 +174,21 @@
 			// If a command is called with "@", then we should return
 			if (error_reporting() == 0)
 				return;
-	
+
 			// If we still have access to QApplicationBase, set the error flag on the Application
 			if (class_exists('QApplicationBase'))
 				QApplicationBase::$ErrorFlag = true;
-	
+
 			// If we are currently dealing with reporting an error, don't go on
 			if (QErrorHandler::$Type)
 				return;
-	
+
 			// Setup the QErrorHandler Object
 			QErrorHandler::$Type = 'Error';
 			QErrorHandler::$Message = $strErrorString;
 			QErrorHandler::$Filename = $strErrorFile;
 			QErrorHandler::$LineNumber = $intErrorLine;
-			
+
 			switch ($intErrorNumber) {
 				case E_ERROR:
 					QErrorHandler::$ObjectType = 'E_ERROR';
@@ -239,19 +239,19 @@
 					QErrorHandler::$ObjectType = 'Unknown';
 					break;
 			}
-	
+
 			// Setup the Stack Trace
 			QErrorHandler::$StackTrace = "";
 			$objBackTrace = debug_backtrace();
 			for ($intIndex = 0; $intIndex < count($objBackTrace); $intIndex++) {
 				$objItem = $objBackTrace[$intIndex];
-				
+
 				$strKeyFile = (array_key_exists('file', $objItem)) ? $objItem['file'] : '';
 				$strKeyLine = (array_key_exists('line', $objItem)) ? $objItem['line'] : '';
 				$strKeyClass = (array_key_exists('class', $objItem)) ? $objItem['class'] : '';
 				$strKeyType = (array_key_exists('type', $objItem)) ? $objItem['type'] : '';
 				$strKeyFunction = (array_key_exists('function', $objItem)) ? $objItem['function'] : '';
-				
+
 				QErrorHandler::$StackTrace .= sprintf("#%s %s(%s): %s%s%s()\n",
 					$intIndex,
 					$strKeyFile,
@@ -263,7 +263,7 @@
 
 			QErrorHandler::Run();
 		}
-		
+
 		/**
 		 * A modified version of var_export to use var_dump via the output buffer, which
 		 * can better handle recursive structures.
@@ -276,7 +276,7 @@
 				$mixData->PrepForVarExport();
 			ob_start();
 			var_dump($mixData);
-			
+
 			$strToReturn = ob_get_clean();
 
 			if ($blnHtmlEntities) {

@@ -50,7 +50,7 @@ class Api {
         $Response = new stdClass();
         $Response->result = $mxdResult;
         $Response->errors = array();
-        foreach(Error::All() as $Error) {
+        foreach(MyError::All() as $Error) {
             $stdPublicError = $Error->ToStdClass();
             unset($stdPublicError->type,$stdPublicError->code,$stdPublicError->file,$stdPublicError->line);
             $Response->errors[] = $stdPublicError;
@@ -96,21 +96,21 @@ class Api {
 
         }
 
-        if(!isset($stdRequest->strClassName)||strlen(trim($stdRequest->strClassName))==0) Error::Register("className","No class name defined");
-        if(!isset($stdRequest->strMethodName)||strlen(trim($stdRequest->strMethodName))==0) Error::Register("methodName","No method name defined");
-        if(!isset($stdRequest->aryParameters)) Error::Register("parameters","No parameters defined");
-        elseif(!is_array($stdRequest->aryParameters)) Error::Register("parameters","Parameters must be defined as array");
+        if(!isset($stdRequest->strClassName)||strlen(trim($stdRequest->strClassName))==0) MyError::Register("className","No class name defined");
+        if(!isset($stdRequest->strMethodName)||strlen(trim($stdRequest->strMethodName))==0) MyError::Register("methodName","No method name defined");
+        if(!isset($stdRequest->aryParameters)) MyError::Register("parameters","No parameters defined");
+        elseif(!is_array($stdRequest->aryParameters)) MyError::Register("parameters","Parameters must be defined as array");
 
-        if(Error::Count()>0) self::Respond();
+        if(MyError::Count()>0) self::Respond();
 
-        if(!is_callable(array(trim($stdRequest->strClassName),trim($stdRequest->strMethodName)))) Error::Register("method","Method is not callable");
+        if(!is_callable(array(trim($stdRequest->strClassName),trim($stdRequest->strMethodName)))) MyError::Register("method","Method is not callable");
         else {
             $ReflectionMethod = new ReflectionMethod(trim($stdRequest->strClassName),trim($stdRequest->strMethodName));
-            if(preg_match('/^\s*\*\s*@api(\s[^$]*)?$/im',$ReflectionMethod->getDocComment())==0) Error::Register("method","Method is not callable");
-            if(count($stdRequest->aryParameters)<$ReflectionMethod->getNumberOfRequiredParameters()) Error::Register("parameters","Missing parameters");
+            if(preg_match('/^\s*\*\s*@api(\s[^$]*)?$/im',$ReflectionMethod->getDocComment())==0) MyError::Register("method","Method is not callable");
+            if(count($stdRequest->aryParameters)<$ReflectionMethod->getNumberOfRequiredParameters()) MyError::Register("parameters","Missing parameters");
         }
 
-        if(Error::Count()>0) self::Respond();
+        if(MyError::Count()>0) self::Respond();
 
         try {
 
@@ -118,7 +118,7 @@ class Api {
 
         } catch(Exception $Exception){
 
-            Error::Register("methodCall",$Exception->getMessage());
+            MyError::Register("methodCall",$Exception->getMessage());
             self::Respond();
 
         }
