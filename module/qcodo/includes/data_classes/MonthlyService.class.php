@@ -10,7 +10,7 @@ class MonthlyService extends MonthlyServiceGen {
 	 */
 	public static function LoadCurrentlyOnDuty(){
 		$aryResult = array();
-		foreach(Person::QueryArray(QQ::Equal(QQN::Person()->MonthlyService->Month,strftime("%Y%m"))) as $Person) $aryResult[] = $Person->ToStdClass(true);
+		foreach(Person::QueryArray(QQ::Equal(QQN::Person()->MonthlyService->Month,date('Ym'))) as $Person) $aryResult[] = $Person->ToStdClass(true);
 		return $aryResult;
 	}
 
