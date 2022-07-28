@@ -55,4 +55,11 @@
 		QApplicationBase::$ClassFile['rankmetacontrol'] = __DATA_META_CONTROLS__ . '/RankMetaControl.class.php';
 		QApplicationBase::$ClassFile['rankdatagrid'] = __DATA_META_CONTROLS__ . '/RankDataGrid.class.php';
 
+	// ClassPaths for the Team class
+		QApplicationBase::$ClassFile['team'] = __DATA_CLASSES__ . '/Team.class.php';
+		QApplicationBase::$ClassFile['qqnodeteam'] = __DATA_CLASSES__ . '/Team.class.php';
+		QApplicationBase::$ClassFile['qqreversereferencenodeteam'] = __DATA_CLASSES__ . '/Team.class.php';
+		QApplicationBase::$ClassFile['teammetacontrol'] = __DATA_META_CONTROLS__ . '/TeamMetaControl.class.php';
+		QApplicationBase::$ClassFile['teamdatagrid'] = __DATA_META_CONTROLS__ . '/TeamDataGrid.class.php';
+
 ?>

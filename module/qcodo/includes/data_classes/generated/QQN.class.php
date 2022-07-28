@@ -48,5 +48,11 @@
 		static public function Rank() {
 			return new QQNodeRank('rank', null, null);
 		}
+		/**
+		 * @return QQNodeTeam
+		 */
+		static public function Team() {
+			return new QQNodeTeam('team', null, null);
+		}
 	}
 ?>

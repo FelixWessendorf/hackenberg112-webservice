@@ -104,6 +104,14 @@ VALUES (01, 'Feuerwehrmann-Anwärter', 1, 'm'),
        (23, 'Stadtbrandinspektorin', 11, 'f'),
        (24, 'Fachberaterin', 0, 'f');
 
+CREATE TABLE team (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255),
+  members TEXT,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 ALTER TABLE `appointment`
     ADD PRIMARY KEY (`appointment_id`),
   ADD KEY `start_end_idx` (`start`,`end`);
