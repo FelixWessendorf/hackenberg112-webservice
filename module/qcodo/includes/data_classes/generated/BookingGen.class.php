@@ -1,36 +1,35 @@
 <?php
 	/**
-	 * The abstract TeamGen class defined here is
+	 * The abstract BookingGen class defined here is
 	 * code-generated and contains all the basic CRUD-type functionality as well as
 	 * basic methods to handle relationships and index-based loading.
 	 *
-	 * To use, you should use the Team subclass which
-	 * extends this TeamGen class.
+	 * To use, you should use the Booking subclass which
+	 * extends this BookingGen class.
 	 *
 	 * Because subsequent re-code generations will overwrite any changes to this
 	 * file, you should leave this file unaltered to prevent yourself from losing
 	 * any information or code changes.  All customizations should be done by
 	 * overriding existing or implementing new methods, properties and variables
-	 * in the Team class.
+	 * in the Booking class.
 	 * 
 	 * @package hackenberg112-webservice
 	 * @subpackage GeneratedDataObjects
 	 * @property integer $Id the value for intId (Read-Only PK)
-	 * @property string $Name the value for strName 
-	 * @property string $Members the value for strMembers 
+	 * @property integer $TeamId the value for intTeamId (Not Null)
+	 * @property integer $Amount the value for intAmount (Not Null)
 	 * @property QDateTime $CreatedAt the value for dttCreatedAt (Not Null)
-	 * @property Booking $_Booking the value for the private _objBooking (Read-Only) if set due to an expansion on the booking.team_id reverse relationship
-	 * @property Booking[] $_BookingArray the value for the private _objBookingArray (Read-Only) if set due to an ExpandAsArray on the booking.team_id reverse relationship
+	 * @property Team $Team the value for the Team object referenced by intTeamId (Not Null)
 	 * @property boolean $__Restored whether or not this object was restored from the database (as opposed to created new)
 	 */
-	class TeamGen extends QBaseClass {
+	class BookingGen extends QBaseClass {
 
 		///////////////////////////////////////////////////////////////////////
 		// PROTECTED MEMBER VARIABLES and TEXT FIELD MAXLENGTHS (if applicable)
 		///////////////////////////////////////////////////////////////////////
 		
 		/**
-		 * Protected member variable that maps to the database PK Identity column team.id
+		 * Protected member variable that maps to the database PK Identity column booking.id
 		 * @var integer intId
 		 */
 		protected $intId;
@@ -38,45 +37,28 @@
 
 
 		/**
-		 * Protected member variable that maps to the database column team.name
-		 * @var string strName
+		 * Protected member variable that maps to the database column booking.team_id
+		 * @var integer intTeamId
 		 */
-		protected $strName;
-		const NameMaxLength = 255;
-		const NameDefault = null;
+		protected $intTeamId;
+		const TeamIdDefault = null;
 
 
 		/**
-		 * Protected member variable that maps to the database column team.members
-		 * @var string strMembers
+		 * Protected member variable that maps to the database column booking.amount
+		 * @var integer intAmount
 		 */
-		protected $strMembers;
-		const MembersDefault = null;
+		protected $intAmount;
+		const AmountDefault = null;
 
 
 		/**
-		 * Protected member variable that maps to the database column team.created_at
+		 * Protected member variable that maps to the database column booking.created_at
 		 * @var QDateTime dttCreatedAt
 		 */
 		protected $dttCreatedAt;
 		const CreatedAtDefault = null;
 
-
-		/**
-		 * Private member variable that stores a reference to a single Booking object
-		 * (of type Booking), if this Team object was restored with
-		 * an expansion on the booking association table.
-		 * @var Booking _objBooking;
-		 */
-		private $_objBooking;
-
-		/**
-		 * Private member variable that stores a reference to an array of Booking objects
-		 * (of type Booking[]), if this Team object was restored with
-		 * an ExpandAsArray on the booking association table.
-		 * @var Booking[] _objBookingArray;
-		 */
-		private $_objBookingArray = array();
 
 		/**
 		 * Protected array of virtual attributes for this object (e.g. extra/other calculated and/or non-object bound
@@ -100,6 +82,16 @@
 		// PROTECTED MEMBER OBJECTS
 		///////////////////////////////
 
+		/**
+		 * Protected member variable that contains the object pointed by the reference
+		 * in the database column booking.team_id.
+		 *
+		 * NOTE: Always use the Team property getter to correctly retrieve this Team object.
+		 * (Because this class implements late binding, this variable reference MAY be null.)
+		 * @var Team objTeam
+		 */
+		protected $objTeam;
+
 
 
 
@@ -117,26 +109,26 @@
 		}
 
 		/**
-		 * Load a Team from PK Info
+		 * Load a Booking from PK Info
 		 * @param integer $intId
-		 * @return Team
+		 * @return Booking
 		 */
 		public static function Load($intId) {
 			// Use QuerySingle to Perform the Query
-			return Team::QuerySingle(
-				QQ::Equal(QQN::Team()->Id, $intId)
+			return Booking::QuerySingle(
+				QQ::Equal(QQN::Booking()->Id, $intId)
 			);
 		}
 
 		/**
-		 * Load all Teams
+		 * Load all Bookings
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return Team[]
+		 * @return Booking[]
 		 */
 		public static function LoadAll($objOptionalClauses = null) {
-			// Call Team::QueryArray to perform the LoadAll query
+			// Call Booking::QueryArray to perform the LoadAll query
 			try {
-				return Team::QueryArray(QQ::All(), $objOptionalClauses);
+				return Booking::QueryArray(QQ::All(), $objOptionalClauses);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -144,12 +136,12 @@
 		}
 
 		/**
-		 * Count all Teams
+		 * Count all Bookings
 		 * @return int
 		 */
 		public static function CountAll() {
-			// Call Team::QueryCount to perform the CountAll query
-			return Team::QueryCount(QQ::All());
+			// Call Booking::QueryCount to perform the CountAll query
+			return Booking::QueryCount(QQ::All());
 		}
 
 
@@ -171,12 +163,12 @@
 		 */
 		protected static function BuildQueryStatement(&$objQueryBuilder, QQCondition $objConditions, $objOptionalClauses, $mixParameterArray, $blnCountOnly) {
 			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
+			$objDatabase = Booking::GetDatabase();
 
-			// Create/Build out the QueryBuilder object with Team-specific SELET and FROM fields
-			$objQueryBuilder = new QQueryBuilder($objDatabase, 'team');
-			Team::GetSelectFields($objQueryBuilder);
-			$objQueryBuilder->AddFromItem('team');
+			// Create/Build out the QueryBuilder object with Booking-specific SELET and FROM fields
+			$objQueryBuilder = new QQueryBuilder($objDatabase, 'booking');
+			Booking::GetSelectFields($objQueryBuilder);
+			$objQueryBuilder->AddFromItem('booking');
 
 			// Set "CountOnly" option (if applicable)
 			if ($blnCountOnly)
@@ -223,17 +215,17 @@
 		}
 
 		/**
-		 * Static Qcodo Query method to query for a single Team object.
+		 * Static Qcodo Query method to query for a single Booking object.
 		 * Uses BuildQueryStatment to perform most of the work.
 		 * @param QQCondition $objConditions any conditions on the query, itself
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
-		 * @return Team the queried object
+		 * @return Booking the queried object
 		 */
 		public static function QuerySingle(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the Query Statement
 			try {
-				$strQuery = Team::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+				$strQuery = Booking::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -242,13 +234,13 @@
 			// Perform the Query
 			$objDbResult = $objQueryBuilder->Database->Query($strQuery);
 
-			// Instantiate a new Team object and return it
+			// Instantiate a new Booking object and return it
 
 			// Do we have to expand anything?
 			if ($objQueryBuilder->ExpandAsArrayNodes) {
 				$objToReturn = array();
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					$objItem = Team::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objToReturn, $objQueryBuilder->ColumnAliasArray);
+					$objItem = Booking::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objToReturn, $objQueryBuilder->ColumnAliasArray);
 					if ($objItem) $objToReturn[] = $objItem;
 				}
 
@@ -262,22 +254,22 @@
 				// No expands just return the first row
 				$objDbRow = $objDbResult->GetNextRow();
 				if (is_null($objDbRow)) return null;
-				return Team::InstantiateDbRow($objDbRow, null, null, null, $objQueryBuilder->ColumnAliasArray);
+				return Booking::InstantiateDbRow($objDbRow, null, null, null, $objQueryBuilder->ColumnAliasArray);
 			}
 		}
 
 		/**
-		 * Static Qcodo Query method to query for an array of Team objects.
+		 * Static Qcodo Query method to query for an array of Booking objects.
 		 * Uses BuildQueryStatment to perform most of the work.
 		 * @param QQCondition $objConditions any conditions on the query, itself
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
-		 * @return Team[] the queried objects as an array
+		 * @return Booking[] the queried objects as an array
 		 */
 		public static function QueryArray(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the Query Statement
 			try {
-				$strQuery = Team::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+				$strQuery = Booking::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -285,7 +277,7 @@
 
 			// Perform the Query and Instantiate the Array Result
 			$objDbResult = $objQueryBuilder->Database->Query($strQuery);
-			return Team::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNodes, $objQueryBuilder->ColumnAliasArray);
+			return Booking::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNodes, $objQueryBuilder->ColumnAliasArray);
 		}
 
 		/**
@@ -299,7 +291,7 @@
 		public static function QueryCursor(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the query statement
 			try {
-				$strQuery = Team::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+				$strQuery = Booking::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -314,7 +306,7 @@
 		}
 
 		/**
-		 * Static Qcodo Query method to query for a count of Team objects.
+		 * Static Qcodo Query method to query for a count of Booking objects.
 		 * Uses BuildQueryStatment to perform most of the work.
 		 * @param QQCondition $objConditions any conditions on the query, itself
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
@@ -324,7 +316,7 @@
 		public static function QueryCount(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the Query Statement
 			try {
-				$strQuery = Team::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, true);
+				$strQuery = Booking::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, true);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -355,15 +347,15 @@
 
 /*		public static function QueryArrayCached($strConditions, $mixParameterArray = null) {
 			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
+			$objDatabase = Booking::GetDatabase();
 
 			// Lookup the QCache for This Query Statement
-			$objCache = new QCache('query', 'team_' . serialize($strConditions));
+			$objCache = new QCache('query', 'booking_' . serialize($strConditions));
 			if (!($strQuery = $objCache->GetData())) {
-				// Not Found -- Go ahead and Create/Build out a new QueryBuilder object with Team-specific fields
+				// Not Found -- Go ahead and Create/Build out a new QueryBuilder object with Booking-specific fields
 				$objQueryBuilder = new QQueryBuilder($objDatabase);
-				Team::GetSelectFields($objQueryBuilder);
-				Team::GetFromFields($objQueryBuilder);
+				Booking::GetSelectFields($objQueryBuilder);
+				Booking::GetFromFields($objQueryBuilder);
 
 				// Ensure the Passed-in Conditions is a string
 				try {
@@ -393,11 +385,11 @@
 
 			// Perform the Query and Instantiate the Array Result
 			$objDbResult = $objDatabase->Query($strQuery);
-			return Team::InstantiateDbResult($objDbResult);
+			return Booking::InstantiateDbResult($objDbResult);
 		}*/
 
 		/**
-		 * Updates a QQueryBuilder with the SELECT fields for this Team
+		 * Updates a QQueryBuilder with the SELECT fields for this Booking
 		 * @param QQueryBuilder $objBuilder the Query Builder object to update
 		 * @param string $strPrefix optional prefix to add to the SELECT fields
 		 */
@@ -406,13 +398,13 @@
 				$strTableName = $strPrefix;
 				$strAliasPrefix = $strPrefix . '__';
 			} else {
-				$strTableName = 'team';
+				$strTableName = 'booking';
 				$strAliasPrefix = '';
 			}
 
 			$objBuilder->AddSelectItem($strTableName, 'id', $strAliasPrefix . 'id');
-			$objBuilder->AddSelectItem($strTableName, 'name', $strAliasPrefix . 'name');
-			$objBuilder->AddSelectItem($strTableName, 'members', $strAliasPrefix . 'members');
+			$objBuilder->AddSelectItem($strTableName, 'team_id', $strAliasPrefix . 'team_id');
+			$objBuilder->AddSelectItem($strTableName, 'amount', $strAliasPrefix . 'amount');
 			$objBuilder->AddSelectItem($strTableName, 'created_at', $strAliasPrefix . 'created_at');
 		}
 
@@ -424,65 +416,33 @@
 		///////////////////////////////
 
 		/**
-		 * Instantiate a Team from a Database Row.
+		 * Instantiate a Booking from a Database Row.
 		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
-		 * is calling this Team::InstantiateDbRow in order to perform
+		 * is calling this Booking::InstantiateDbRow in order to perform
 		 * early binding on referenced objects.
 		 * @param QDatabaseRowBase $objDbRow
 		 * @param string $strAliasPrefix
 		 * @param string $strExpandAsArrayNodes
 		 * @param QBaseClass $objPreviousItem
 		 * @param string[] $strColumnAliasArray
-		 * @return Team
+		 * @return Booking
 		*/
 		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $strExpandAsArrayNodes = null, $objPreviousItem = null, $strColumnAliasArray = array()) {
 			// If blank row, return null
 			if (!$objDbRow)
 				return null;
 
-			// See if we're doing an array expansion on the previous item
-			$strAlias = $strAliasPrefix . 'id';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			if (($strExpandAsArrayNodes) && ($objPreviousItem) &&
-				($objPreviousItem->intId == $objDbRow->GetColumn($strAliasName, 'Integer'))) {
 
-				// We are.  Now, prepare to check for ExpandAsArray clauses
-				$blnExpandedViaArray = false;
-				if (!$strAliasPrefix)
-					$strAliasPrefix = 'team__';
-
-
-				$strAlias = $strAliasPrefix . 'booking__id';
-				$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-				if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
-					(!is_null($objDbRow->GetColumn($strAliasName)))) {
-					if ($intPreviousChildItemCount = count($objPreviousItem->_objBookingArray)) {
-						$objPreviousChildItem = $objPreviousItem->_objBookingArray[$intPreviousChildItemCount - 1];
-						$objChildItem = Booking::InstantiateDbRow($objDbRow, $strAliasPrefix . 'booking__', $strExpandAsArrayNodes, $objPreviousChildItem, $strColumnAliasArray);
-						if ($objChildItem)
-							$objPreviousItem->_objBookingArray[] = $objChildItem;
-					} else
-						$objPreviousItem->_objBookingArray[] = Booking::InstantiateDbRow($objDbRow, $strAliasPrefix . 'booking__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-					$blnExpandedViaArray = true;
-				}
-
-				// Either return false to signal array expansion, or check-to-reset the Alias prefix and move on
-				if ($blnExpandedViaArray)
-					return false;
-				else if ($strAliasPrefix == 'team__')
-					$strAliasPrefix = null;
-			}
-
-			// Create a new instance of the Team object
-			$objToReturn = new Team();
+			// Create a new instance of the Booking object
+			$objToReturn = new Booking();
 			$objToReturn->__blnRestored = true;
 
 			$strAliasName = array_key_exists($strAliasPrefix . 'id', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'id'] : $strAliasPrefix . 'id';
 			$objToReturn->intId = $objDbRow->GetColumn($strAliasName, 'Integer');
-			$strAliasName = array_key_exists($strAliasPrefix . 'name', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'name'] : $strAliasPrefix . 'name';
-			$objToReturn->strName = $objDbRow->GetColumn($strAliasName, 'VarChar');
-			$strAliasName = array_key_exists($strAliasPrefix . 'members', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'members'] : $strAliasPrefix . 'members';
-			$objToReturn->strMembers = $objDbRow->GetColumn($strAliasName, 'Blob');
+			$strAliasName = array_key_exists($strAliasPrefix . 'team_id', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'team_id'] : $strAliasPrefix . 'team_id';
+			$objToReturn->intTeamId = $objDbRow->GetColumn($strAliasName, 'Integer');
+			$strAliasName = array_key_exists($strAliasPrefix . 'amount', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'amount'] : $strAliasPrefix . 'amount';
+			$objToReturn->intAmount = $objDbRow->GetColumn($strAliasName, 'Integer');
 			$strAliasName = array_key_exists($strAliasPrefix . 'created_at', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'created_at'] : $strAliasPrefix . 'created_at';
 			$objToReturn->dttCreatedAt = $objDbRow->GetColumn($strAliasName, 'DateTime');
 
@@ -496,30 +456,26 @@
 
 			// Prepare to Check for Early/Virtual Binding
 			if (!$strAliasPrefix)
-				$strAliasPrefix = 'team__';
+				$strAliasPrefix = 'booking__';
 
-
-
-
-			// Check for Booking Virtual Binding
-			$strAlias = $strAliasPrefix . 'booking__id';
+			// Check for Team Early Binding
+			$strAlias = $strAliasPrefix . 'team_id__id';
 			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			if (!is_null($objDbRow->GetColumn($strAliasName))) {
-				if (($strExpandAsArrayNodes) && (array_key_exists($strAlias, $strExpandAsArrayNodes)))
-					$objToReturn->_objBookingArray[] = Booking::InstantiateDbRow($objDbRow, $strAliasPrefix . 'booking__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-				else
-					$objToReturn->_objBooking = Booking::InstantiateDbRow($objDbRow, $strAliasPrefix . 'booking__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-			}
+			if (!is_null($objDbRow->GetColumn($strAliasName)))
+				$objToReturn->objTeam = Team::InstantiateDbRow($objDbRow, $strAliasPrefix . 'team_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
+
+
+
 
 			return $objToReturn;
 		}
 
 		/**
-		 * Instantiate an array of Teams from a Database Result
+		 * Instantiate an array of Bookings from a Database Result
 		 * @param QDatabaseResultBase $objDbResult
 		 * @param string $strExpandAsArrayNodes
 		 * @param string[] $strColumnAliasArray
-		 * @return Team[]
+		 * @return Booking[]
 		 */
 		public static function InstantiateDbResult(QDatabaseResultBase $objDbResult, $strExpandAsArrayNodes = null, $strColumnAliasArray = null) {
 			$objToReturn = array();
@@ -535,7 +491,7 @@
 			if ($strExpandAsArrayNodes) {
 				$objLastRowItem = null;
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					$objItem = Team::InstantiateDbRow($objDbRow, null, $strExpandAsArrayNodes, $objLastRowItem, $strColumnAliasArray);
+					$objItem = Booking::InstantiateDbRow($objDbRow, null, $strExpandAsArrayNodes, $objLastRowItem, $strColumnAliasArray);
 					if ($objItem) {
 						$objToReturn[] = $objItem;
 						$objLastRowItem = $objItem;
@@ -543,18 +499,18 @@
 				}
 			} else {
 				while ($objDbRow = $objDbResult->GetNextRow())
-					$objToReturn[] = Team::InstantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
+					$objToReturn[] = Booking::InstantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
 			}
 
 			return $objToReturn;
 		}
 
 		/**
-		 * Instantiate a single Team object from a query cursor (e.g. a DB ResultSet).
+		 * Instantiate a single Booking object from a query cursor (e.g. a DB ResultSet).
 		 * Cursor is automatically moved to the "next row" of the result set.
 		 * Will return NULL if no cursor or if the cursor has no more rows in the resultset.
 		 * @param QDatabaseResultBase $objDbResult cursor resource
-		 * @return Team next row resulting from the query
+		 * @return Booking next row resulting from the query
 		 */
 		public static function InstantiateCursor(QDatabaseResultBase $objDbResult) {
 			// If blank resultset, then return empty result
@@ -572,7 +528,7 @@
 			$strExpandAsArrayNodes = $objDbResult->QueryBuilder->ExpandAsArrayNodes;
 
 			// Load up the return result with a row and return it
-			return Team::InstantiateDbRow($objDbRow, null, $strExpandAsArrayNodes, null, $strColumnAliasArray);
+			return Booking::InstantiateDbRow($objDbRow, null, $strExpandAsArrayNodes, null, $strColumnAliasArray);
 		}
 
 
@@ -583,14 +539,48 @@
 		///////////////////////////////////////////////////
 			
 		/**
-		 * Load a single Team object,
+		 * Load a single Booking object,
 		 * by Id Index(es)
 		 * @param integer $intId
-		 * @return Team
+		 * @return Booking
 		*/
 		public static function LoadById($intId, $objOptionalClauses = null) {
-			return Team::QuerySingle(
-				QQ::Equal(QQN::Team()->Id, $intId)
+			return Booking::QuerySingle(
+				QQ::Equal(QQN::Booking()->Id, $intId)
+			, $objOptionalClauses
+			);
+		}
+			
+		/**
+		 * Load an array of Booking objects,
+		 * by TeamId Index(es)
+		 * @param integer $intTeamId
+		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
+		 * @return Booking[]
+		*/
+		public static function LoadArrayByTeamId($intTeamId, $objOptionalClauses = null) {
+			// Call Booking::QueryArray to perform the LoadArrayByTeamId query
+			try {
+				return Booking::QueryArray(
+					QQ::Equal(QQN::Booking()->TeamId, $intTeamId),
+					$objOptionalClauses
+					);
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+		}
+
+		/**
+		 * Count Bookings
+		 * by TeamId Index(es)
+		 * @param integer $intTeamId
+		 * @return int
+		*/
+		public static function CountByTeamId($intTeamId, $objOptionalClauses = null) {
+			// Call Booking::QueryCount to perform the CountByTeamId query
+			return Booking::QueryCount(
+				QQ::Equal(QQN::Booking()->TeamId, $intTeamId)
 			, $objOptionalClauses
 			);
 		}
@@ -609,14 +599,14 @@
 		//////////////////////////////////////
 
 		/**
-		 * Save this Team
+		 * Save this Booking
 		 * @param bool $blnForceInsert
 		 * @param bool $blnForceUpdate
 		 * @return int
 		 */
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
+			$objDatabase = Booking::GetDatabase();
 
 			$mixToReturn = null;
 
@@ -624,19 +614,19 @@
 				if ((!$this->__blnRestored) || ($blnForceInsert)) {
 					// Perform an INSERT query
 					$objDatabase->NonQuery('
-						INSERT INTO `team` (
-							`name`,
-							`members`,
+						INSERT INTO `booking` (
+							`team_id`,
+							`amount`,
 							`created_at`
 						) VALUES (
-							' . $objDatabase->SqlVariable($this->strName) . ',
-							' . $objDatabase->SqlVariable($this->strMembers) . ',
+							' . $objDatabase->SqlVariable($this->intTeamId) . ',
+							' . $objDatabase->SqlVariable($this->intAmount) . ',
 							' . $objDatabase->SqlVariable($this->dttCreatedAt) . '
 						)
 					');
 
 					// Update Identity column and return its value
-					$mixToReturn = $this->intId = $objDatabase->InsertId('team', 'id');
+					$mixToReturn = $this->intId = $objDatabase->InsertId('booking', 'id');
 
 					// Journaling
 					if ($objDatabase->JournalingDatabase) $this->Journal('INSERT');
@@ -649,10 +639,10 @@
 					// Perform the UPDATE query
 					$objDatabase->NonQuery('
 						UPDATE
-							`team`
+							`booking`
 						SET
-							`name` = ' . $objDatabase->SqlVariable($this->strName) . ',
-							`members` = ' . $objDatabase->SqlVariable($this->strMembers) . ',
+							`team_id` = ' . $objDatabase->SqlVariable($this->intTeamId) . ',
+							`amount` = ' . $objDatabase->SqlVariable($this->intAmount) . ',
 							`created_at` = ' . $objDatabase->SqlVariable($this->dttCreatedAt) . '
 						WHERE
 							`id` = ' . $objDatabase->SqlVariable($this->intId) . '
@@ -676,21 +666,21 @@
 		}
 
 		/**
-		 * Delete this Team
+		 * Delete this Booking
 		 * @return void
 		 */
 		public function Delete() {
 			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Cannot delete this Team with an unset primary key.');
+				throw new QUndefinedPrimaryKeyException('Cannot delete this Booking with an unset primary key.');
 
 			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
+			$objDatabase = Booking::GetDatabase();
 
 
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				DELETE FROM
-					`team`
+					`booking`
 				WHERE
 					`id` = ' . $objDatabase->SqlVariable($this->intId) . '');
 
@@ -699,47 +689,47 @@
 		}
 
 		/**
-		 * Delete all Teams
+		 * Delete all Bookings
 		 * @return void
 		 */
 		public static function DeleteAll() {
 			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
+			$objDatabase = Booking::GetDatabase();
 
 			// Perform the Query
 			$objDatabase->NonQuery('
 				DELETE FROM
-					`team`');
+					`booking`');
 		}
 
 		/**
-		 * Truncate team table
+		 * Truncate booking table
 		 * @return void
 		 */
 		public static function Truncate() {
 			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
+			$objDatabase = Booking::GetDatabase();
 
 			// Perform the Query
 			$objDatabase->NonQuery('
-				TRUNCATE `team`');
+				TRUNCATE `booking`');
 		}
 
 		/**
-		 * Reload this Team from the database.
+		 * Reload this Booking from the database.
 		 * @return void
 		 */
 		public function Reload() {
 			// Make sure we are actually Restored from the database
 			if (!$this->__blnRestored)
-				throw new QCallerException('Cannot call Reload() on a new, unsaved Team object.');
+				throw new QCallerException('Cannot call Reload() on a new, unsaved Booking object.');
 
 			// Reload the Object
-			$objReloaded = Team::Load($this->intId);
+			$objReloaded = Booking::Load($this->intId);
 
 			// Update $this's local variables to match
-			$this->strName = $objReloaded->strName;
-			$this->strMembers = $objReloaded->strMembers;
+			$this->TeamId = $objReloaded->TeamId;
+			$this->intAmount = $objReloaded->intAmount;
 			$this->dttCreatedAt = $objReloaded->dttCreatedAt;
 		}
 
@@ -749,21 +739,21 @@
 		 * @param string $strJournalCommand
 		 */
 		public function Journal($strJournalCommand) {
-			$objDatabase = Team::GetDatabase()->JournalingDatabase;
+			$objDatabase = Booking::GetDatabase()->JournalingDatabase;
 
 			$objDatabase->NonQuery('
-				INSERT INTO `team` (
+				INSERT INTO `booking` (
 					`id`,
-					`name`,
-					`members`,
+					`team_id`,
+					`amount`,
 					`created_at`,
 					__sys_login_id,
 					__sys_action,
 					__sys_date
 				) VALUES (
 					' . $objDatabase->SqlVariable($this->intId) . ',
-					' . $objDatabase->SqlVariable($this->strName) . ',
-					' . $objDatabase->SqlVariable($this->strMembers) . ',
+					' . $objDatabase->SqlVariable($this->intTeamId) . ',
+					' . $objDatabase->SqlVariable($this->intAmount) . ',
 					' . $objDatabase->SqlVariable($this->dttCreatedAt) . ',
 					' . (($objDatabase->JournaledById) ? $objDatabase->JournaledById : 'NULL') . ',
 					' . $objDatabase->SqlVariable($strJournalCommand) . ',
@@ -776,24 +766,24 @@
 		 * Gets the historical journal for an object from the log database.
 		 * Objects will have VirtualAttributes available to lookup login, date, and action information from the journal object.
 		 * @param integer intId
-		 * @return Team[]
+		 * @return Booking[]
 		 */
 		public static function GetJournalForId($intId) {
-			$objDatabase = Team::GetDatabase()->JournalingDatabase;
+			$objDatabase = Booking::GetDatabase()->JournalingDatabase;
 
-			$objResult = $objDatabase->Query('SELECT * FROM team WHERE id = ' .
+			$objResult = $objDatabase->Query('SELECT * FROM booking WHERE id = ' .
 				$objDatabase->SqlVariable($intId) . ' ORDER BY __sys_date');
 
-			return Team::InstantiateDbResult($objResult);
+			return Booking::InstantiateDbResult($objResult);
 		}
 
 		/**
 		 * Gets the historical journal for this object from the log database.
 		 * Objects will have VirtualAttributes available to lookup login, date, and action information from the journal object.
-		 * @return Team[]
+		 * @return Booking[]
 		 */
 		public function GetJournal() {
-			return Team::GetJournalForId($this->intId);
+			return Booking::GetJournalForId($this->intId);
 		}
 
 
@@ -820,15 +810,15 @@
 					// @return integer
 					return $this->intId;
 
-				case 'Name':
-					// Gets the value for strName 
-					// @return string
-					return $this->strName;
+				case 'TeamId':
+					// Gets the value for intTeamId (Not Null)
+					// @return integer
+					return $this->intTeamId;
 
-				case 'Members':
-					// Gets the value for strMembers 
-					// @return string
-					return $this->strMembers;
+				case 'Amount':
+					// Gets the value for intAmount (Not Null)
+					// @return integer
+					return $this->intAmount;
 
 				case 'CreatedAt':
 					// Gets the value for dttCreatedAt (Not Null)
@@ -839,23 +829,23 @@
 				///////////////////
 				// Member Objects
 				///////////////////
+				case 'Team':
+					// Gets the value for the Team object referenced by intTeamId (Not Null)
+					// @return Team
+					try {
+						if ((!$this->objTeam) && (!is_null($this->intTeamId)))
+							$this->objTeam = Team::Load($this->intTeamId);
+						return $this->objTeam;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 
 				////////////////////////////
 				// Virtual Object References (Many to Many and Reverse References)
 				// (If restored via a "Many-to" expansion)
 				////////////////////////////
-
-				case '_Booking':
-					// Gets the value for the private _objBooking (Read-Only)
-					// if set due to an expansion on the booking.team_id reverse relationship
-					// @return Booking
-					return $this->_objBooking;
-
-				case '_BookingArray':
-					// Gets the value for the private _objBookingArray (Read-Only)
-					// if set due to an ExpandAsArray on the booking.team_id reverse relationship
-					// @return Booking[]
-					return (array) $this->_objBookingArray;
 
 
 				case '__Restored':
@@ -884,23 +874,24 @@
 				///////////////////
 				// Member Variables
 				///////////////////
-				case 'Name':
-					// Sets the value for strName 
-					// @param string $mixValue
-					// @return string
+				case 'TeamId':
+					// Sets the value for intTeamId (Not Null)
+					// @param integer $mixValue
+					// @return integer
 					try {
-						return ($this->strName = QType::Cast($mixValue, QType::String));
+						$this->objTeam = null;
+						return ($this->intTeamId = QType::Cast($mixValue, QType::Integer));
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
 
-				case 'Members':
-					// Sets the value for strMembers 
-					// @param string $mixValue
-					// @return string
+				case 'Amount':
+					// Sets the value for intAmount (Not Null)
+					// @param integer $mixValue
+					// @return integer
 					try {
-						return ($this->strMembers = QType::Cast($mixValue, QType::String));
+						return ($this->intAmount = QType::Cast($mixValue, QType::Integer));
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -921,6 +912,36 @@
 				///////////////////
 				// Member Objects
 				///////////////////
+				case 'Team':
+					// Sets the value for the Team object referenced by intTeamId (Not Null)
+					// @param Team $mixValue
+					// @return Team
+					if (is_null($mixValue)) {
+						$this->intTeamId = null;
+						$this->objTeam = null;
+						return null;
+					} else {
+						// Make sure $mixValue actually is a Team object
+						try {
+							$mixValue = QType::Cast($mixValue, 'Team');
+						} catch (QInvalidCastException $objExc) {
+							$objExc->IncrementOffset();
+							throw $objExc;
+						} 
+
+						// Make sure $mixValue is a SAVED Team object
+						if (is_null($mixValue->Id))
+							throw new QCallerException('Unable to set an unsaved Team for this Booking');
+
+						// Update Local Member Variables
+						$this->objTeam = $mixValue;
+						$this->intTeamId = $mixValue->Id;
+
+						// Return $mixValue
+						return $mixValue;
+					}
+					break;
+
 				default:
 					try {
 						return parent::__set($strName, $mixValue);
@@ -948,188 +969,6 @@
 		// ASSOCIATED OBJECTS' METHODS
 		///////////////////////////////
 
-			
-		
-		// Related Objects' Methods for Booking
-		//-------------------------------------------------------------------
-
-		/**
-		 * Gets all associated Bookings as an array of Booking objects
-		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return Booking[]
-		*/ 
-		public function GetBookingArray($objOptionalClauses = null) {
-			if ((is_null($this->intId)))
-				return array();
-
-			try {
-				return Booking::LoadArrayByTeamId($this->intId, $objOptionalClauses);
-			} catch (QCallerException $objExc) {
-				$objExc->IncrementOffset();
-				throw $objExc;
-			}
-		}
-
-		/**
-		 * Counts all associated Bookings
-		 * @return int
-		*/ 
-		public function CountBookings() {
-			if ((is_null($this->intId)))
-				return 0;
-
-			return Booking::CountByTeamId($this->intId);
-		}
-
-		/**
-		 * Associates a Booking
-		 * @param Booking $objBooking
-		 * @return void
-		*/ 
-		public function AssociateBooking(Booking $objBooking) {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call AssociateBooking on this unsaved Team.');
-			if ((is_null($objBooking->Id)))
-				throw new QUndefinedPrimaryKeyException('Unable to call AssociateBooking on this Team with an unsaved Booking.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				UPDATE
-					`booking`
-				SET
-					`team_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-				WHERE
-					`id` = ' . $objDatabase->SqlVariable($objBooking->Id) . '
-			');
-
-			// Journaling (if applicable)
-			if ($objDatabase->JournalingDatabase) {
-				$objBooking->TeamId = $this->intId;
-				$objBooking->Journal('UPDATE');
-			}
-		}
-
-		/**
-		 * Unassociates a Booking
-		 * @param Booking $objBooking
-		 * @return void
-		*/ 
-		public function UnassociateBooking(Booking $objBooking) {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateBooking on this unsaved Team.');
-			if ((is_null($objBooking->Id)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateBooking on this Team with an unsaved Booking.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				UPDATE
-					`booking`
-				SET
-					`team_id` = null
-				WHERE
-					`id` = ' . $objDatabase->SqlVariable($objBooking->Id) . ' AND
-					`team_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-			');
-
-			// Journaling
-			if ($objDatabase->JournalingDatabase) {
-				$objBooking->TeamId = null;
-				$objBooking->Journal('UPDATE');
-			}
-		}
-
-		/**
-		 * Unassociates all Bookings
-		 * @return void
-		*/ 
-		public function UnassociateAllBookings() {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateBooking on this unsaved Team.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
-
-			// Journaling
-			if ($objDatabase->JournalingDatabase) {
-				foreach (Booking::LoadArrayByTeamId($this->intId) as $objBooking) {
-					$objBooking->TeamId = null;
-					$objBooking->Journal('UPDATE');
-				}
-			}
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				UPDATE
-					`booking`
-				SET
-					`team_id` = null
-				WHERE
-					`team_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-			');
-		}
-
-		/**
-		 * Deletes an associated Booking
-		 * @param Booking $objBooking
-		 * @return void
-		*/ 
-		public function DeleteAssociatedBooking(Booking $objBooking) {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateBooking on this unsaved Team.');
-			if ((is_null($objBooking->Id)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateBooking on this Team with an unsaved Booking.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				DELETE FROM
-					`booking`
-				WHERE
-					`id` = ' . $objDatabase->SqlVariable($objBooking->Id) . ' AND
-					`team_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-			');
-
-			// Journaling
-			if ($objDatabase->JournalingDatabase) {
-				$objBooking->Journal('DELETE');
-			}
-		}
-
-		/**
-		 * Deletes all associated Bookings
-		 * @return void
-		*/ 
-		public function DeleteAllBookings() {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateBooking on this unsaved Team.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Team::GetDatabase();
-
-			// Journaling
-			if ($objDatabase->JournalingDatabase) {
-				foreach (Booking::LoadArrayByTeamId($this->intId) as $objBooking) {
-					$objBooking->Journal('DELETE');
-				}
-			}
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				DELETE FROM
-					`booking`
-				WHERE
-					`team_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-			');
-		}
-
 
 
 
@@ -1139,10 +978,10 @@
 		////////////////////////////////////////
 
 		public static function GetSoapComplexTypeXml() {
-			$strToReturn = '<complexType name="Team"><sequence>';
+			$strToReturn = '<complexType name="Booking"><sequence>';
 			$strToReturn .= '<element name="Id" type="xsd:int"/>';
-			$strToReturn .= '<element name="Name" type="xsd:string"/>';
-			$strToReturn .= '<element name="Members" type="xsd:string"/>';
+			$strToReturn .= '<element name="Team" type="xsd1:Team"/>';
+			$strToReturn .= '<element name="Amount" type="xsd:int"/>';
 			$strToReturn .= '<element name="CreatedAt" type="xsd:dateTime"/>';
 			$strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
 			$strToReturn .= '</sequence></complexType>';
@@ -1150,8 +989,9 @@
 		}
 
 		public static function AlterSoapComplexTypeArray(&$strComplexTypeArray) {
-			if (!array_key_exists('Team', $strComplexTypeArray)) {
-				$strComplexTypeArray['Team'] = Team::GetSoapComplexTypeXml();
+			if (!array_key_exists('Booking', $strComplexTypeArray)) {
+				$strComplexTypeArray['Booking'] = Booking::GetSoapComplexTypeXml();
+				Team::AlterSoapComplexTypeArray($strComplexTypeArray);
 			}
 		}
 
@@ -1159,19 +999,20 @@
 			$objArrayToReturn = array();
 
 			foreach ($objSoapArray as $objSoapObject)
-				array_push($objArrayToReturn, Team::GetObjectFromSoapObject($objSoapObject));
+				array_push($objArrayToReturn, Booking::GetObjectFromSoapObject($objSoapObject));
 
 			return $objArrayToReturn;
 		}
 
 		public static function GetObjectFromSoapObject($objSoapObject) {
-			$objToReturn = new Team();
+			$objToReturn = new Booking();
 			if (property_exists($objSoapObject, 'Id'))
 				$objToReturn->intId = $objSoapObject->Id;
-			if (property_exists($objSoapObject, 'Name'))
-				$objToReturn->strName = $objSoapObject->Name;
-			if (property_exists($objSoapObject, 'Members'))
-				$objToReturn->strMembers = $objSoapObject->Members;
+			if ((property_exists($objSoapObject, 'Team')) &&
+				($objSoapObject->Team))
+				$objToReturn->Team = Team::GetObjectFromSoapObject($objSoapObject->Team);
+			if (property_exists($objSoapObject, 'Amount'))
+				$objToReturn->intAmount = $objSoapObject->Amount;
 			if (property_exists($objSoapObject, 'CreatedAt'))
 				$objToReturn->dttCreatedAt = new QDateTime($objSoapObject->CreatedAt);
 			if (property_exists($objSoapObject, '__blnRestored'))
@@ -1186,12 +1027,16 @@
 			$objArrayToReturn = array();
 
 			foreach ($objArray as $objObject)
-				array_push($objArrayToReturn, Team::GetSoapObjectFromObject($objObject, true));
+				array_push($objArrayToReturn, Booking::GetSoapObjectFromObject($objObject, true));
 
 			return unserialize(serialize($objArrayToReturn));
 		}
 
 		public static function GetSoapObjectFromObject($objObject, $blnBindRelatedObjects) {
+			if ($objObject->objTeam)
+				$objObject->objTeam = Team::GetSoapObjectFromObject($objObject->objTeam, false);
+			else if (!$blnBindRelatedObjects)
+				$objObject->intTeamId = null;
 			if ($objObject->dttCreatedAt)
 				$objObject->dttCreatedAt = $objObject->dttCreatedAt->__toString(QDateTime::FormatSoap);
 			return $objObject;
@@ -1210,27 +1055,27 @@
 
 	/**
 	 * @property-read QQNode $Id
-	 * @property-read QQNode $Name
-	 * @property-read QQNode $Members
+	 * @property-read QQNode $TeamId
+	 * @property-read QQNodeTeam $Team
+	 * @property-read QQNode $Amount
 	 * @property-read QQNode $CreatedAt
-	 * @property-read QQReverseReferenceNodeBooking $Booking
 	 */
-	class QQNodeTeam extends QQNode {
-		protected $strTableName = 'team';
+	class QQNodeBooking extends QQNode {
+		protected $strTableName = 'booking';
 		protected $strPrimaryKey = 'id';
-		protected $strClassName = 'Team';
+		protected $strClassName = 'Booking';
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Id':
 					return new QQNode('id', 'Id', 'integer', $this);
-				case 'Name':
-					return new QQNode('name', 'Name', 'string', $this);
-				case 'Members':
-					return new QQNode('members', 'Members', 'string', $this);
+				case 'TeamId':
+					return new QQNode('team_id', 'TeamId', 'integer', $this);
+				case 'Team':
+					return new QQNodeTeam('team_id', 'Team', 'integer', $this);
+				case 'Amount':
+					return new QQNode('amount', 'Amount', 'integer', $this);
 				case 'CreatedAt':
 					return new QQNode('created_at', 'CreatedAt', 'QDateTime', $this);
-				case 'Booking':
-					return new QQReverseReferenceNodeBooking($this, 'booking', 'reverse_reference', 'team_id');
 
 				case '_PrimaryKeyNode':
 					return new QQNode('id', 'Id', 'integer', $this);
@@ -1247,28 +1092,28 @@
 	
 	/**
 	 * @property-read QQNode $Id
-	 * @property-read QQNode $Name
-	 * @property-read QQNode $Members
+	 * @property-read QQNode $TeamId
+	 * @property-read QQNodeTeam $Team
+	 * @property-read QQNode $Amount
 	 * @property-read QQNode $CreatedAt
-	 * @property-read QQReverseReferenceNodeBooking $Booking
 	 * @property-read QQNode $_PrimaryKeyNode
 	 */
-	class QQReverseReferenceNodeTeam extends QQReverseReferenceNode {
-		protected $strTableName = 'team';
+	class QQReverseReferenceNodeBooking extends QQReverseReferenceNode {
+		protected $strTableName = 'booking';
 		protected $strPrimaryKey = 'id';
-		protected $strClassName = 'Team';
+		protected $strClassName = 'Booking';
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Id':
 					return new QQNode('id', 'Id', 'integer', $this);
-				case 'Name':
-					return new QQNode('name', 'Name', 'string', $this);
-				case 'Members':
-					return new QQNode('members', 'Members', 'string', $this);
+				case 'TeamId':
+					return new QQNode('team_id', 'TeamId', 'integer', $this);
+				case 'Team':
+					return new QQNodeTeam('team_id', 'Team', 'integer', $this);
+				case 'Amount':
+					return new QQNode('amount', 'Amount', 'integer', $this);
 				case 'CreatedAt':
 					return new QQNode('created_at', 'CreatedAt', 'QDateTime', $this);
-				case 'Booking':
-					return new QQReverseReferenceNodeBooking($this, 'booking', 'reverse_reference', 'team_id');
 
 				case '_PrimaryKeyNode':
 					return new QQNode('id', 'Id', 'integer', $this);

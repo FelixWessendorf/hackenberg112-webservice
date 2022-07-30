@@ -7,6 +7,12 @@
 			return new QQNodeAppointment('appointment', null, null);
 		}
 		/**
+		 * @return QQNodeBooking
+		 */
+		static public function Booking() {
+			return new QQNodeBooking('booking', null, null);
+		}
+		/**
 		 * @return QQNodeMonthlyService
 		 */
 		static public function MonthlyService() {

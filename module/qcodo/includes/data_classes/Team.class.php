@@ -36,4 +36,44 @@ class Team extends TeamGen {
 
 	}
 
+	/**
+	 * Loads a list of all registered teams
+	 * @api
+	 * @return stdClass[]
+	 * @throws QCallerException
+	 */
+	public static function ListAll(): array {
+		return array_map(
+			function($team) {
+				return [
+					'id' => $team->Id,
+					'name' => $team->Name,
+					'members' => json_decode($team->Members),
+					'created_at' => date('c', $team->CreatedAt->getTimestamp())
+				];
+			},
+			self::LoadAll(QQ::OrderBy(QQN::Team()->Name))
+		);
+	}
+
+	/**
+	 * Books $amount beverages onto team with id $id
+	 * @api
+	 * @param int $id
+	 * @param int $amount
+	 * @throws QCallerException
+	 */
+	public static function Book(int $id, int $amount) {
+		$team = self::Load($id);
+		if ($team === null) {
+			MyError::Register('id', sprintf('Es existiert kein Team mit der Id „%d“', $id));
+		} else {
+			$booking = new Booking();
+			$booking->TeamId = $id;
+			$booking->Amount = $amount;
+			$booking->CreatedAt = QDateTime::Now();
+			$booking->Save();
+		}
+	}
+
 }

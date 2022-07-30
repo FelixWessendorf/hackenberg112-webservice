@@ -6,6 +6,13 @@
 		QApplicationBase::$ClassFile['appointmentmetacontrol'] = __DATA_META_CONTROLS__ . '/AppointmentMetaControl.class.php';
 		QApplicationBase::$ClassFile['appointmentdatagrid'] = __DATA_META_CONTROLS__ . '/AppointmentDataGrid.class.php';
 
+	// ClassPaths for the Booking class
+		QApplicationBase::$ClassFile['booking'] = __DATA_CLASSES__ . '/Booking.class.php';
+		QApplicationBase::$ClassFile['qqnodebooking'] = __DATA_CLASSES__ . '/Booking.class.php';
+		QApplicationBase::$ClassFile['qqreversereferencenodebooking'] = __DATA_CLASSES__ . '/Booking.class.php';
+		QApplicationBase::$ClassFile['bookingmetacontrol'] = __DATA_META_CONTROLS__ . '/BookingMetaControl.class.php';
+		QApplicationBase::$ClassFile['bookingdatagrid'] = __DATA_META_CONTROLS__ . '/BookingDataGrid.class.php';
+
 	// ClassPaths for the MonthlyService class
 		QApplicationBase::$ClassFile['monthlyservice'] = __DATA_CLASSES__ . '/MonthlyService.class.php';
 		QApplicationBase::$ClassFile['qqnodemonthlyservice'] = __DATA_CLASSES__ . '/MonthlyService.class.php';

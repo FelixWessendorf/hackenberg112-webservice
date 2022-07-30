@@ -112,6 +112,16 @@ CREATE TABLE team (
   PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+CREATE TABLE booking (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  team_id INT UNSIGNED NOT NULL,
+  amount INT NOT NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET  = utf8;
+
+ALTER TABLE booking ADD CONSTRAINT booking_team_id_fk FOREIGN KEY (team_id) REFERENCES team(id);
+
 ALTER TABLE `appointment`
     ADD PRIMARY KEY (`appointment_id`),
   ADD KEY `start_end_idx` (`start`,`end`);

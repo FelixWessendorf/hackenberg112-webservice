@@ -622,7 +622,7 @@
 				set_error_handler(array('QErrorHandler', 'HandleError'), 0);
 				QApplication::$intStoredErrorLevel = error_reporting(0);
 			} else {
-				set_error_handler($strName, $intLevel);
+				set_error_handler($strName, $intLevel ?? E_ALL);
 				QApplication::$intStoredErrorLevel = -1;
 			}
 		}
