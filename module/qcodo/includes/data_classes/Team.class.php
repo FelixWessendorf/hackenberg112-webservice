@@ -40,20 +40,32 @@ class Team extends TeamGen {
 	 * Loads a list of all registered teams
 	 * @api
 	 * @return stdClass[]
-	 * @throws QCallerException
 	 */
 	public static function ListAll(): array {
-		return array_map(
-			function($team) {
-				return [
-					'id' => $team->Id,
-					'name' => $team->Name,
-					'members' => json_decode($team->Members),
-					'created_at' => date('c', $team->CreatedAt->getTimestamp())
-				];
-			},
-			self::LoadAll(QQ::OrderBy(QQN::Team()->Name))
+		$query_result = self::GetDatabase()->Query(
+			"
+			SELECT
+				team.id, team.name, team.members, COALESCE(SUM(amount), 0) AS amount, team.created_at
+			FROM
+				team
+				LEFT JOIN booking ON team.id = booking.team_id
+			GROUP BY
+				team.id, team.name
+			ORDER BY
+				team.name
+			"
 		);
+		$result = [];
+		while ($row = $query_result->FetchArray()) {
+			$result[] = [
+				'id' => intval($row['id']),
+				'name' => $row['name'],
+				'members' => json_decode($row['members']),
+				'amount' => intval($row['amount']),
+				'created_at' => date('c', strtotime($row['created_at']))
+			];
+		}
+		return  $result;
 	}
 
 	/**
