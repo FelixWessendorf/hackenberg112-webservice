@@ -35,5 +35,31 @@ class Operation extends OperationGen {
 		$stdOperation->description = $this->Description;
 		return $stdOperation;
 	}
+	/**
+	 * @param string $date
+	 * @param string $description
+	 * @param string $password
+	 * @throws QCallerException
+	 * @api
+	 */
 
+	public static function newMission(string $date, string $description, string $password): void {
+		if ($password !== MISSSION_PASSWORD) {
+			MyError::Register('password', 'Passwort falsch');
+		} else {
+			$_description = trim($description);
+			if (strlen($_description) === 0) {
+				MyError::Register('description', 'Bitte einen Einsatz angeben');
+			}
+			if (strlen($date) === 0) {
+				MyError::Register('date', 'Bitte ein Datum angeben');
+			}
+			if (MyError::Count() === 0) {
+				$mission = new self;
+				$mission->Date = new QDateTime($date);
+				$mission->Description = $_description;
+				$mission->Save();
+			}
+		}
+	}
 }
