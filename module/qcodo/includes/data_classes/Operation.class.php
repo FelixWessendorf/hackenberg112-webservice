@@ -35,6 +35,7 @@ class Operation extends OperationGen {
 		$stdOperation->description = $this->Description;
 		return $stdOperation;
 	}
+
 	/**
 	 * @param string $date
 	 * @param string $description
@@ -42,24 +43,45 @@ class Operation extends OperationGen {
 	 * @throws QCallerException
 	 * @api
 	 */
-
-	public static function newMission(string $date, string $description, string $password): void {
+	public static function newOperation(string $date, string $description, string $password): void {
 		if ($password !== MISSSION_PASSWORD) {
 			MyError::Register('password', 'Passwort falsch');
 		} else {
-			$_description = trim($description);
-			if (strlen($_description) === 0) {
+			if (strlen(trim($description)) === 0) {
 				MyError::Register('description', 'Bitte einen Einsatz angeben');
 			}
-			if (strlen($date) === 0) {
-				MyError::Register('date', 'Bitte ein Datum angeben');
+			if (strlen($date) === 0 && !preg_match('/^\d{4}-\d{2}-\d{2}$/',$date)) {
+				MyError::Register('date', 'Bitte ein korrektes Datum angeben');
 			}
 			if (MyError::Count() === 0) {
 				$mission = new self;
 				$mission->Date = new QDateTime($date);
-				$mission->Description = $_description;
+				$mission->Description = trim($description);
 				$mission->Save();
 			}
 		}
+	}
+
+	/**
+	 * @api
+	 * @return stdClass[]
+	 * @throws Exception
+	 */
+	public static function loadOperationNames(){
+		$query_result = self::GetDatabase()->Query(
+			"
+			SELECT DISTINCT
+				description
+			FROM
+				operation
+			ORDER BY
+				description
+			"
+		);
+		$result = [];
+		while ($row = $query_result->FetchArray()) {
+		$result[] = $row['description'];
+		}
+		return  $result;
 	}
 }
