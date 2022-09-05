@@ -41,6 +41,7 @@ class Operation extends OperationGen {
 	 * @param string $description
 	 * @param string $password
 	 * @throws QCallerException
+	 * @throws Exception
 	 * @api
 	 */
 	public static function newOperation(string $date, string $description, string $password): void {
@@ -50,7 +51,7 @@ class Operation extends OperationGen {
 			if (strlen(trim($description)) === 0) {
 				MyError::Register('description', 'Bitte einen Einsatz angeben');
 			}
-			if (strlen($date) === 0 && !preg_match('/^\d{4}-\d{2}-\d{2}$/',$date)) {
+			if (strlen($date) === 0 || !preg_match('/^\d{4}-\d{2}-\d{2}$/',$date)) {
 				MyError::Register('date', 'Bitte ein korrektes Datum angeben');
 			}
 			if (MyError::Count() === 0) {
