@@ -40,18 +40,17 @@ class Operation extends OperationGen {
 	 * @param string $date
 	 * @param string $description
 	 * @param string $password
-	 * @throws QCallerException
 	 * @throws Exception
 	 * @api
 	 */
 	public static function newOperation(string $date, string $description, string $password): void {
-		if ($password !== MISSSION_PASSWORD) {
+		if ($password !== MISSION_PASSWORD) {
 			MyError::Register('password', 'Passwort falsch');
 		} else {
 			if (strlen(trim($description)) === 0) {
 				MyError::Register('description', 'Bitte einen Einsatz angeben');
 			}
-			if (strlen($date) === 0 || !preg_match('/^\d{4}-\d{2}-\d{2}$/',$date)) {
+			if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || strtotime($date) === false) {
 				MyError::Register('date', 'Bitte ein korrektes Datum angeben');
 			}
 			if (MyError::Count() === 0) {
@@ -68,11 +67,11 @@ class Operation extends OperationGen {
 	 * @return stdClass[]
 	 * @throws Exception
 	 */
-	public static function loadOperationNames(){
+	public static function loadOperationNames(): array {
 		$query_result = self::GetDatabase()->Query(
 			"
-			SELECT DISTINCT
-				description
+			SELECT
+				DISTINCT description
 			FROM
 				operation
 			ORDER BY
@@ -81,8 +80,8 @@ class Operation extends OperationGen {
 		);
 		$result = [];
 		while ($row = $query_result->FetchArray()) {
-		$result[] = $row['description'];
+			$result[] = $row['description'];
 		}
-		return  $result;
+		return $result;
 	}
 }
