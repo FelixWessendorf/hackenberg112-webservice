@@ -44,7 +44,7 @@ class Operation extends OperationGen {
 	 * @api
 	 */
 	public static function newOperation(string $date, string $description, string $password): void {
-		if ($password !== MISSION_PASSWORD) {
+		if ($password !== API_PASSWORD) {
 			MyError::Register('password', 'Passwort falsch');
 		} else {
 			if (strlen(trim($description)) === 0) {
