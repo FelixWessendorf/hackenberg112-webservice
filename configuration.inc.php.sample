@@ -1,0 +1,8 @@
+<?php
+
+const API_PASSWORD = 'secret';
+
+const MYSQL_SERVER = 'mysql';
+const MYSQL_DATABASE = 'hackenberg112';
+const MYSQL_USERNAME = 'hackenberg112';
+const MYSQL_PASSWORD = 'hackenberg112';

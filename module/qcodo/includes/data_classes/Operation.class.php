@@ -36,4 +36,52 @@ class Operation extends OperationGen {
 		return $stdOperation;
 	}
 
+	/**
+	 * @param string $date
+	 * @param string $description
+	 * @param string $password
+	 * @throws Exception
+	 * @api
+	 */
+	public static function newOperation(string $date, string $description, string $password): void {
+		if ($password !== API_PASSWORD) {
+			MyError::Register('password', 'Passwort falsch');
+		} else {
+			if (strlen(trim($description)) === 0) {
+				MyError::Register('description', 'Bitte einen Einsatz angeben');
+			}
+			if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || strtotime($date) === false) {
+				MyError::Register('date', 'Bitte ein korrektes Datum angeben');
+			}
+			if (MyError::Count() === 0) {
+				$mission = new self;
+				$mission->Date = new QDateTime($date);
+				$mission->Description = trim($description);
+				$mission->Save();
+			}
+		}
+	}
+
+	/**
+	 * @api
+	 * @return stdClass[]
+	 * @throws Exception
+	 */
+	public static function loadOperationNames(): array {
+		$query_result = self::GetDatabase()->Query(
+			"
+			SELECT
+				DISTINCT description
+			FROM
+				operation
+			ORDER BY
+				description
+			"
+		);
+		$result = [];
+		while ($row = $query_result->FetchArray()) {
+			$result[] = $row['description'];
+		}
+		return $result;
+	}
 }

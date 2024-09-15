@@ -208,7 +208,8 @@
 			$this->strSerializedData = parent::format(DateTime::ISO8601);
 			return array('blnDateNull', 'blnTimeNull', 'strSerializedData');
 		}
-		public function __wakeup() {
+
+		public function __wakeup(): void {
 			parent::__construct($this->strSerializedData);
 		}
 
@@ -377,12 +378,12 @@
 			return $strToReturn;
 		}
 
-		public function format($strFormat) {
+		public function format($strFormat): string {
 			$this->ReinforceNullProperties();
 			return parent::format($strFormat);
 		}
 
-		public function setTime($intHour, $intMinute, $intSecond = null, $intMicroseconds = null) {
+		public function setTime($intHour, $intMinute, $intSecond = null, $intMicroseconds = null): QDateTime {
 			// For compatibility with PHP 5.3
 			if (is_null($intSecond)) $intSecond = 0;
 
@@ -406,7 +407,7 @@
 			return $this;
 		}
 
-		public function setDate($intYear, $intMonth, $intDay) {
+		public function setDate($intYear, $intMonth, $intDay): QDateTime {
 			$intYear = QType::Cast($intYear, QType::Integer);
 			$intMonth = QType::Cast($intMonth, QType::Integer);
 			$intDay = QType::Cast($intDay, QType::Integer);
@@ -558,7 +559,7 @@
 			return new QDateTimeSpan($intDifference);
 		}
 
-		public function Add($dtsSpan){
+		public function Add($dtsSpan): QDateTime{
 			if ($dtsSpan instanceof QDateTimeSpan) {
 				// And add the Span Second count to it
 				$this->Timestamp = $this->Timestamp + $dtsSpan->Seconds;
@@ -598,7 +599,7 @@
 			return $this;
 		}
 
-		public function Modify($mixValue) {
+		public function Modify($mixValue): QDateTime|false {
 			parent::modify($mixValue);
 			return $this;
 		}

@@ -1,4 +1,5 @@
 .idea
 module/qcodo/configuration.inc.php
+configuration.inc.php
 php_errors.log
 mysql/data
