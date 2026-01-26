@@ -31,7 +31,7 @@ jobs:
         id: meta-php
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ steps.image_name.outputs.IMAGE_NAME_LOWER }}/php
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/php
           tags: |
             type=raw,value=latest
             type=sha,prefix={{branch}}-
@@ -49,7 +49,7 @@ jobs:
         id: meta-nginx
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ steps.image_name.outputs.IMAGE_NAME_LOWER }}/nginx
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/nginx
           tags: |
             type=raw,value=latest
             type=sha,prefix={{branch}}-
@@ -81,8 +81,8 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
             # Pull latest images
-            docker pull ${{ env.REGISTRY }}/${{ steps.image_name.outputs.IMAGE_NAME_LOWER }}/php:latest
-            docker pull ${{ env.REGISTRY }}/${{ steps.image_name.outputs.IMAGE_NAME_LOWER }}/nginx:latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/php:latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/nginx:latest
             
             # Stop and remove old containers
             docker compose -f docker-compose.prod.yml down
