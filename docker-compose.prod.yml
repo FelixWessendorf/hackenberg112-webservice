@@ -1,0 +1,40 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      - TZ=Europe/Berlin
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    networks:
+      - backend
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  php:
+    image: ghcr.io/${GITHUB_REPOSITORY}/php:latest
+    env_file:
+      - .env
+    networks:
+      - backend
+    restart: unless-stopped
+    depends_on:
+      - mysql
+
+  nginx:
+    image: ghcr.io/${GITHUB_REPOSITORY}/nginx:latest
+    depends_on:
+      - php
+    networks:
+      - frontend
+      - backend
+    ports:
+      - '127.0.0.1:7070:80'
+    restart: unless-stopped
+
+networks:
+  frontend:
+  backend:
