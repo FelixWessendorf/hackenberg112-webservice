@@ -22,7 +22,7 @@
 				'server' => getenv('MYSQL_SERVER'),
 				'port' => null,
 				'database' => getenv('MYSQL_DATABASE'),
-				'username' => getenv('MYSQL_USERNAME'),
+				'username' => getenv('MYSQL_USER'),
 				'password' => getenv('MYSQL_PASSWORD'),
 				'encoding' => 'utf8',
 				'profiling' => false)));
