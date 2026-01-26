@@ -2,3 +2,4 @@
 module/qcodo/configuration.inc.php
 php_errors.log
 mysql/data
+.env

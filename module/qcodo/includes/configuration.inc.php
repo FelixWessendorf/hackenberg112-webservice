@@ -10,33 +10,29 @@
 	// to the configuration constants as it makes sense for your PHP and docroot installation.
 
 	define('SERVER_INSTANCE', 'dev');
-	if(!defined('QCODO_SERVER')) require_once(implode(DIRECTORY_SEPARATOR,array(__DIR__,"..",implode(".",array("configuration","inc","php")))));
 
 	switch (SERVER_INSTANCE) {
 		case 'dev':
-            define ('__DOCROOT__', __DIR__.'/../www');
+			define ('__DOCROOT__', __DIR__.'/../www');
 			define ('__VIRTUAL_DIRECTORY__', '');
 			define ('__SUBDIRECTORY__', '');
 
 			define('DB_CONNECTION_1', serialize(array(
 				'adapter' => 'MySqli5',
-				'server' => QCODO_SERVER,
+				'server' => getenv('MYSQL_SERVER'),
 				'port' => null,
-				'database' => QCODO_DATABASE,
-				'username' => QCODO_USERNAME,
-				'password' => QCODO_PASSWORD,
-                'encoding' => 'utf8',
+				'database' => getenv('MYSQL_DATABASE'),
+				'username' => getenv('MYSQL_USERNAME'),
+				'password' => getenv('MYSQL_PASSWORD'),
+				'encoding' => 'utf8',
 				'profiling' => false)));
 			break;
 
+		case 'prod':
+		case 'stage':
 		case 'test':
 			break;
 
-		case 'stage':
-			break;
-
-		case 'prod':
-			break;
 	}
 
 	define('ALLOW_REMOTE_ADMIN', true);
