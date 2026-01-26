@@ -7,7 +7,7 @@ RUN apk update && apk upgrade && \
     && rm -rf /var/cache/apk/*
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-COPY php.ini $PHP_INI_DIR/conf.d/php.ini
+COPY ./php/php.ini $PHP_INI_DIR/conf.d/php.ini
 
 WORKDIR /var/www/html
 
