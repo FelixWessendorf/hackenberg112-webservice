@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   php:
-    image: ghcr.io/${GITHUB_REPOSITORY}/php:latest
+    image: ghcr.io/felixwessendorf/hackenberg112-webservice/php:latest
     env_file:
       - .env
     networks:
@@ -25,7 +25,7 @@ services:
       - mysql
 
   nginx:
-    image: ghcr.io/${GITHUB_REPOSITORY}/nginx:latest
+    image: ghcr.io/felixwessendorf/hackenberg112-webservice/nginx:latest
     depends_on:
       - php
     networks:
