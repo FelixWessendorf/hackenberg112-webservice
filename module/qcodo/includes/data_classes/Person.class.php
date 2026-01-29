@@ -49,7 +49,7 @@ class Person extends PersonGen {
 		$aryRow = $QueryResult->FetchRow();
 		$fltAverageTimeOnDuty = floatval($aryRow[0]);
 		
-		$QueryResult = Person::GetDatabase()->Query("select group_concat(name separator ' / ') from rank where sort=(select ROUND(AVG(sort)) from person join rank using(rank_id))");
+		$QueryResult = Person::GetDatabase()->Query("select group_concat(name separator ' / ') from `rank` where sort=(select ROUND(AVG(sort)) from person join `rank` using(rank_id))");
 		$aryRow = $QueryResult->FetchRow();
 		$strAverageRankName = $aryRow[0];
 		
