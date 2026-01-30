@@ -77,6 +77,11 @@ jobs:
               -o docker-compose.prod.yml \
               https://api.github.com/repos/${{ github.repository }}/contents/docker-compose.prod.yml?ref=master
             
+            curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3.raw" \
+              -o init.sql \
+              https://api.github.com/repos/${{ github.repository }}/contents/init.sql?ref=master
+            
             # Login to GitHub Container Registry
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
